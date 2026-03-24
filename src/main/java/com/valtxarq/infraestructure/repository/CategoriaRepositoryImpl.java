@@ -6,10 +6,10 @@ import com.valtxarq.domain.repository.ICategoriaRepository;
 import com.valtxarq.infraestructure.entity.CategoriaEntity;
 import com.valtxarq.infraestructure.mapper.CategoriaMapper;
 import com.valtxarq.infraestructure.repository.jpa.JpaCategoriaRepository;
+import com.valtxarq.shared.page.PageRequest;
 import com.valtxarq.shared.page.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
@@ -34,12 +34,13 @@ public class CategoriaRepositoryImpl implements ICategoriaRepository {
     }
 
     @Override
-    public PageResponse<Categoria> findAllPaginated(CategoriaFilter filter) {
-        Sort sort = filter.sortDir().equalsIgnoreCase("desc")
-                ? Sort.by(filter.sortBy()).descending()
-                : Sort.by(filter.sortBy()).ascending();
+    public PageResponse<Categoria> findAllPaginated(CategoriaFilter filter, PageRequest pageRequest) {
+        Sort sort = pageRequest.getSortDir().equalsIgnoreCase("desc")
+                ? Sort.by(pageRequest.getSortBy()).descending()
+                : Sort.by(pageRequest.getSortBy()).ascending();
 
-        Pageable pageable = PageRequest.of(filter.page() - 1, filter.size(), sort);
+        Pageable pageable = org.springframework.data.domain.PageRequest.of(
+                pageRequest.getPage() - 1, pageRequest.getSize(), sort);
 
         Specification<CategoriaEntity> spec = Specification
                 .<CategoriaEntity>where((root, query, cb) ->
@@ -60,8 +61,6 @@ public class CategoriaRepositoryImpl implements ICategoriaRepository {
                 .totalElements(page.getTotalElements())
                 .build();
     }
-
-
 
     @Override
     public Optional<Categoria> findById(Long id) {

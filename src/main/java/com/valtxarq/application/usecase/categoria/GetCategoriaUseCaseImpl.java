@@ -8,6 +8,7 @@ import com.valtxarq.domain.filters.CategoriaFilter;
 import com.valtxarq.domain.model.Categoria;
 import com.valtxarq.domain.repository.ICategoriaRepository;
 import com.valtxarq.shared.exception.ResourceNotFoundException;
+import com.valtxarq.shared.page.PageRequest;
 import com.valtxarq.shared.page.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,13 @@ public class GetCategoriaUseCaseImpl implements GetCategoriaUseCase {
     @Override
     public PageResponse<CategoriaDto> findAllPaginated(CategoriaFilterDto dto) {
         CategoriaFilter filter = mapper.toFilter(dto);
-        PageResponse<Categoria> page = categoriaRepository.findAllPaginated(filter);
+        PageRequest pageRequest = PageRequest.builder()       // solo paginacion
+                .page(dto.getPage())
+                .size(dto.getSize())
+                .sortBy(dto.getSortBy())
+                .sortDir(dto.getSortDir())
+                .build();
+        PageResponse<Categoria> page = categoriaRepository.findAllPaginated(filter,pageRequest);
 
         return PageResponse.<CategoriaDto>builder()
                 .content(page.getContent().stream().map(mapper::toDto).toList())

@@ -11,9 +11,11 @@ import com.valtxarq.domain.repository.IProductoRepository;
 import com.valtxarq.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UpdateProductoUseCaseImpl implements UpdateProductoUseCase {
 
     private final IProductoRepository productoRepository;

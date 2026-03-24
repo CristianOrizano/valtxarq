@@ -15,7 +15,6 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-@Transactional
 public class ProductoRepositoryImpl implements IProductoRepository {
 
     private final JpaProductoRepository jpaProductoRepository;

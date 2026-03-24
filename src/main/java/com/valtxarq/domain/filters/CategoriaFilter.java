@@ -7,9 +7,5 @@ import lombok.Setter;
 
 public record CategoriaFilter(
         String nombre,
-        String descripcion,
-        int page,
-        int size,
-        String sortBy,
-        String sortDir
+        String descripcion
 ) {}

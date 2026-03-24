@@ -15,6 +15,4 @@ public interface CategoriaAppMapper {
     Categoria toDomain (CategoriaSaveDto categoriaSaveDto);
     Categoria updateDomain(CategoriaSaveDto categoriaSaveDto, @MappingTarget Categoria categoria);
     CategoriaFilter toFilter(CategoriaFilterDto dto);
-
-
 }
