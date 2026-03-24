@@ -1,0 +1,8 @@
+package com.valtxarq.application.ports.categoria;
+
+import com.valtxarq.application.dto.categoria.CategoriaDto;
+import com.valtxarq.application.dto.categoria.CategoriaSaveDto;
+
+public interface CreateCategoriaUseCase {
+    CategoriaDto execute(CategoriaSaveDto request);
+}
