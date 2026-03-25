@@ -30,7 +30,7 @@ public class CategoriaRepositoryImpl implements ICategoriaRepository {
         return jpaCategoriaRepository.findAll()
                 .stream()
                 .map(mapper::toDomain)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

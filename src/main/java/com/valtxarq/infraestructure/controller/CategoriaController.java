@@ -1,14 +1,13 @@
 package com.valtxarq.infraestructure.controller;
 
-import com.valtxarq.application.dto.categoria.CategoriaDto;
-import com.valtxarq.application.dto.categoria.CategoriaFilterDto;
-import com.valtxarq.application.dto.categoria.CategoriaSaveDto;
+import com.valtxarq.application.dto.categoria.*;
 import com.valtxarq.application.ports.categoria.CreateCategoriaUseCase;
 import com.valtxarq.application.ports.categoria.DeleteCategoriaUseCase;
 import com.valtxarq.application.ports.categoria.GetCategoriaUseCase;
 import com.valtxarq.application.ports.categoria.UpdateCategoriaUseCase;
 import com.valtxarq.shared.page.PageResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +32,7 @@ public class CategoriaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoriaDto> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<CategoriaDetalleDto> findById(@PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(getCategoriaUseCase.findById(id));
     }
@@ -60,15 +59,15 @@ public class CategoriaController {
     }
 
     @PostMapping
-    public ResponseEntity<CategoriaDto> create(@RequestBody CategoriaSaveDto categoriaSaveDto) {
+    public ResponseEntity<CategoriaDto> create(@Valid @RequestBody CategoriaSaveDto categoriaSaveDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(createCategoriaUseCase.execute(categoriaSaveDto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoriaDto> update(@RequestBody CategoriaSaveDto categoriaSaveDto,@PathVariable("id") Long id) {
+    public ResponseEntity<CategoriaDto> update(@Valid @RequestBody CategoriaUpdateDto categoriaUpdateDto, @PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(updateCategoriaUseCase.execute(id,categoriaSaveDto));
+                .body(updateCategoriaUseCase.execute(id,categoriaUpdateDto));
     }
 
     @DeleteMapping("/{id}")

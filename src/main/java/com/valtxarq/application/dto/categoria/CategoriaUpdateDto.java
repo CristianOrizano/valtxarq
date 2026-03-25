@@ -1,7 +1,5 @@
 package com.valtxarq.application.dto.categoria;
 
-import com.valtxarq.application.dto.producto.ProductoSaveSimpleDto;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -9,13 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoriaSaveDto {
+public class CategoriaUpdateDto {
 
     @NotBlank(message = "El nombre es obligatorio")
     @Size(max = 100, message = "El nombre no puede superar los 100 caracteres")
@@ -23,7 +19,4 @@ public class CategoriaSaveDto {
 
     @Size(max = 255, message = "La descripción no puede superar los 255 caracteres")
     private String descripcion;
-
-    @Valid
-    private List<ProductoSaveSimpleDto> productos;
 }
