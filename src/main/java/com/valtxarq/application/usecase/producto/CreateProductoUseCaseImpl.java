@@ -10,9 +10,11 @@ import com.valtxarq.domain.repository.ICategoriaRepository;
 import com.valtxarq.domain.repository.IProductoRepository;
 import com.valtxarq.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -24,10 +26,13 @@ public class CreateProductoUseCaseImpl implements CreateProductoUseCase {
 
     @Override
     public ProductoDto execute(ProductoSaveDto dto) {
+        log.info("Creando producto: {} en categoria id: {}", dto.getNombre(), dto.getCategoriaId());
         Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
                 .orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrada: " + dto.getCategoriaId()));
         Producto producto = mapper.toDomain(dto);
         producto.setCategoria(categoria);
-        return mapper.toDto(productoRepository.save(producto));
+        ProductoDto result = mapper.toDto(productoRepository.save(producto));
+        log.info("Producto creado con id: {}", result.getId());
+        return result;
     }
 }

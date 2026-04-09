@@ -10,9 +10,11 @@ import com.valtxarq.domain.repository.ICategoriaRepository;
 import com.valtxarq.domain.repository.IProductoRepository;
 import com.valtxarq.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -24,12 +26,15 @@ public class UpdateProductoUseCaseImpl implements UpdateProductoUseCase {
 
     @Override
     public ProductoDto execute(Long id, ProductoSaveDto dto) {
+        log.info("Actualizando producto id: {}", id);
         Producto producto = productoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado: " + id));
         Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
                 .orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrada: " + dto.getCategoriaId()));
         mapper.updateDomain(dto, producto);
         producto.setCategoria(categoria);
-        return mapper.toDto(productoRepository.save(producto));
+        ProductoDto result = mapper.toDto(productoRepository.save(producto));
+        log.info("Producto id: {} actualizado", id);
+        return result;
     }
 }

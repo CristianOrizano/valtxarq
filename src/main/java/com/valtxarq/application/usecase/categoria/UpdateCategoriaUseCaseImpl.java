@@ -9,9 +9,11 @@ import com.valtxarq.domain.model.Categoria;
 import com.valtxarq.domain.repository.ICategoriaRepository;
 import com.valtxarq.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -22,9 +24,12 @@ public class UpdateCategoriaUseCaseImpl implements UpdateCategoriaUseCase {
 
     @Override
     public CategoriaDto execute(Long id, CategoriaUpdateDto request) {
+        log.info("Actualizando categoria id: {}", id);
         Categoria categoria = categoriaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrada: " + id));
         mapper.updateDomain(request, categoria);
-        return mapper.toDto(categoriaRepository.save(categoria));
+        CategoriaDto result = mapper.toDto(categoriaRepository.save(categoria));
+        log.info("Categoria id: {} actualizada", id);
+        return result;
     }
 }

@@ -24,49 +24,28 @@ public class GlobalExceptionHandler {
                 .map(e -> e.getField() + ": " + e.getDefaultMessage())
                 .collect(Collectors.joining(", "));
 
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                mensaje,
-                request.getRequestURI(),
-                LocalDateTime.now()
-        );
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-    }
-
-    // Manejo de cualquier excepción NO controlada
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex, HttpServletRequest request) {
-        log.error("Error inesperado en {}: {}", request.getRequestURI(), ex.getMessage(), ex);
-
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                "Ocurrió un error interno. Intente más tarde.",
-                request.getRequestURI(),
-                LocalDateTime.now()
-        );
+        log.warn("[{}] {} | path: {}", HttpStatus.BAD_REQUEST.value(), mensaje, request.getRequestURI());
 
         return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(error);
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), mensaje));
     }
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ErrorResponse> handleCustomException(CustomException ex, HttpServletRequest request) {
-
-        ErrorResponse error = new ErrorResponse(
-                ex.getStatus().value(),
-                ex.getStatus().getReasonPhrase(),
-                ex.getMessage(),
-                request.getRequestURI(),
-                LocalDateTime.now()
-        );
+        log.warn("[{}] {} | path: {} | timestamp: {}", ex.getStatus().value(), ex.getMessage(), request.getRequestURI(), LocalDateTime.now());
 
         return ResponseEntity
                 .status(ex.getStatus())
-                .body(error);
+                .body(new ErrorResponse(ex.getStatus().value(), ex.getMessage()));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex, HttpServletRequest request) {
+        log.error("[500] Error inesperado | path: {} | timestamp: {} | causa: {}", request.getRequestURI(), LocalDateTime.now(), ex.getMessage(), ex);
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Ocurrió un error interno. Intente más tarde."));
     }
 }
-
